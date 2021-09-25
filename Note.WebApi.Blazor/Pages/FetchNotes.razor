@@ -1,0 +1,52 @@
+﻿@page "/fetchnotes"
+
+@using Note.WebApi.Blazor.Data;
+@using Notes.Core;
+
+@inject DbClient _db;
+
+<h1>Notes</h1>
+
+<p>This component demonstrates fetching data from a service.</p>
+
+@if (notes == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Temp. (C)</th>
+                <th>Temp. (F)</th>
+                <th>Summary</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var note in notes)
+            {
+                <tr>
+                    <td>@note.Title</td>
+                    <td>@note.Content</td>
+                    <td>@note.Title</td>
+                    <td>@note.Content</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+       private List<Note> notes;
+
+        protected override async Task OnInitializedAsync()
+        {
+            note = await _db.GetNotesCollection // .GetNotes();
+         }
+
+
+    }
+
+
