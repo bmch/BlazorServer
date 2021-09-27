@@ -1,11 +1,11 @@
-﻿@page "/fetchnotes"
+@page "/fetchfines"
 
 @using Notes.Core;
 
 @inject INoteServices _db
-<h1>Notes</h1>
+<h1>Fines</h1>
 
-<p>This component demonstrates fetching data from a service.</p>
+<p>This component demonstrates fetching and creating fines from a service.</p>
 
 @if (notes == null)
 {
@@ -13,21 +13,39 @@
 }
 else
 {
-
-            @foreach (var note in notes)
+        <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Status</th>
+                <th>Reference</th>
+                <th>Address</th>
+                <th>Fine Amount</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var fine in notes)
             {
-                <div>
-                    <div>@note.Id</div>
-                    <div>@note.Status</div>
-                    <div>@note.Reference</div>
+                <tr>
+                    <td>@fine.PersonName</td>
+                    <td>@fine.Status</td>
+                    <td>@fine.Reference</td>
+                    <td>@fine.Address1</td>
+                    <td>@fine.Amount</td>
 
-                 <button @onclick="()=>Delete(note)">X</button>
+                    <td><button @onclick="()=>Delete(fine)">Delete</button></td>
 
-                </div>
+                </tr>
             }
+        </tbody>
+    </table>
+            
 
     <input placeholder="Name" @bind="personName" />
     <input placeholder="Address" @bind="address1" />
+    <input placeholder="Fine amount" @bind="amount" />
+
     <button @onclick="AddNote">Add Fine</button>
 
 }
@@ -36,6 +54,8 @@ else
     private List<Note> notes;
     private string personName;
     private string address1;
+    private int amount;
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -47,11 +67,12 @@ else
     {
         if (!string.IsNullOrWhiteSpace(personName) && !string.IsNullOrWhiteSpace(address1))
         {
-            var ticks = new DateTime(2021,9,9).Ticks;
+            var ticks = new DateTime(2021,9,25).Ticks;
             var ans = DateTime.Now.Ticks - ticks;
             var reference = ans.ToString("x");
 
-            var noteToAdd = new Note { 
+            var noteToAdd = new Note {
+                Amount = amount, 
                 PersonName = personName, 
                 Status = "unpaid",
                 Address1 = address1,
@@ -61,6 +82,8 @@ else
             _db.AddNote(noteToAdd);
             personName = string.Empty;
             address1 = string.Empty;
+            amount = 0;
+
             notes =  _db.GetNotes();
 
         }
