@@ -1,10 +1,8 @@
 ﻿@page "/fetchnotes"
 
-@using Note.WebApi.Blazor.Data;
 @using Notes.Core;
 
-@inject DbClient _db;
-
+@inject INoteServices _db
 <h1>Notes</h1>
 
 <p>This component demonstrates fetching data from a service.</p>
@@ -15,38 +13,56 @@
 }
 else
 {
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Temp. (C)</th>
-                <th>Temp. (F)</th>
-                <th>Summary</th>
-            </tr>
-        </thead>
-        <tbody>
+
             @foreach (var note in notes)
             {
-                <tr>
-                    <td>@note.Title</td>
-                    <td>@note.Content</td>
-                    <td>@note.Title</td>
-                    <td>@note.Content</td>
-                </tr>
+                <div>
+                    <div>@note.Title</div>
+                    <div>@note.Content</div>
+                    
+
+                 <button @onclick="()=>Delete(note)">X</button>
+
+                </div>
             }
-        </tbody>
-    </table>
+
+    <input placeholder="Title" @bind="newTitle" />
+    <input placeholder="Content" @bind="newContent" />
+    <button @onclick="AddNote">Add Note</button>
+
 }
 
 @code {
-       private List<Note> notes;
+    private List<Note> notes;
+    private string newTitle;
+    private string newContent;
 
-        protected override async Task OnInitializedAsync()
-        {
-            note = await _db.GetNotesCollection // .GetNotes();
-         }
-
-
+    protected override async Task OnInitializedAsync()
+    {
+        notes =  _db.GetNotes();
+        await Task.Delay(1000);
     }
+
+    private void AddNote()
+    {
+        if (!string.IsNullOrWhiteSpace(newTitle) && !string.IsNullOrWhiteSpace(newContent))
+        {
+            _db.AddNote(new Note { Title = newTitle, Content = newContent });
+            newTitle = string.Empty;
+            newContent = string.Empty;
+            notes =  _db.GetNotes();
+
+        }
+        
+    }
+
+    private void  Delete(Note note)
+    {
+         _db.DeleteNote(note.Id);
+        notes = _db.GetNotes();
+    }
+
+}
+
 
 

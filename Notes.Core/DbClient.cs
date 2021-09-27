@@ -10,9 +10,9 @@ namespace Notes.Core
         public DbClient(IOptions<NoteDbConfig> noteDbConfig)
         {
             // create client, from db get collection
-            var client = new MongoClient(noteDbConfig.Value.Connection_String);
-            var databse = client.GetDatabase(noteDbConfig.Value.Database_Name);
-            _notes = databse.GetCollection<Note>(noteDbConfig.Value.Note_Collection_Name);
+            var client = new MongoClient(noteDbConfig.Value.ConnectionString);
+            var databse = client.GetDatabase(noteDbConfig.Value.DatabaseName);
+            _notes = databse.GetCollection<Note>(noteDbConfig.Value.CollectionName);
         }
 
         public IMongoCollection<Note> GetNotesCollection() => _notes;
@@ -20,3 +20,4 @@ namespace Notes.Core
     }
     
 }
+

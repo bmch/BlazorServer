@@ -1,12 +1,18 @@
 ﻿using System;
 namespace Notes.Core
 {
-    public class NoteDbConfig
+    public class NoteDbConfig:INoteDbConfig
     {
-        public string Database_Name { get; set; }
-        public string Note_Collection_Name { get; set; }
-        public string Connection_String { get; set; }
+        public string DatabaseName { get; set; }
+        public string CollectionName { get; set; }
+        public string ConnectionString { get; set; }
+       
+    }
 
-
+    public interface INoteDbConfig
+    {
+        string CollectionName { get; set; }
+        string ConnectionString { get; set; }
+        string DatabaseName { get; set; }
     }
 }

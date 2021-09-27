@@ -17,6 +17,9 @@ using Note.WebApi.Blazor.Areas.Identity;
 using Note.WebApi.Blazor.Data;
 using Notes.Core;
 
+using System.Net.Http;
+using Microsoft.Extensions.Options;
+
 namespace Note.WebApi.Blazor
 {
     public class Startup
@@ -32,9 +35,18 @@ namespace Note.WebApi.Blazor
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<IDbClient, DbClient>();
-            services.Configure<NoteDbConfig>(Configuration);
-            services.AddTransient<INoteServices, NoteServices>();
+            // services.AddSingleton<IDbClient, DbClient>();
+            // services.Configure<NoteDbConfig>(Configuration);
+            // services.AddTransient<INoteServices, NoteServices>();
+            services.Configure<NoteDbConfig>(
+                Configuration.GetSection(nameof(NoteDbConfig)));
+
+            services.AddSingleton<INoteDbConfig>(provider =>
+                provider.GetRequiredService<IOptions<NoteDbConfig>>().Value);
+
+            services.AddScoped<INoteServices,NoteServices>();
+
+
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlite(
                     Configuration.GetConnectionString("DefaultConnection")));

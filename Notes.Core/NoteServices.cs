@@ -8,9 +8,17 @@ namespace Notes.Core
     {
         private readonly IMongoCollection<Note> _notes;
 
-        public NoteServices(IDbClient dbClient)
+        // public NoteServices(IDbClient dbClient)
+        // {
+        //    _notes =  dbClient.GetNotesCollection();
+        // }
+
+         public NoteServices(INoteDbConfig settings)
         {
-           _notes =  dbClient.GetNotesCollection();
+            var client = new MongoClient(settings.ConnectionString);
+            var database = client.GetDatabase(settings.DatabaseName);
+
+            _notes = database.GetCollection<Note>(settings.CollectionName);
         }
 
         public Note AddNote(Note note)
