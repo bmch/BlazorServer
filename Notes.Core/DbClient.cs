@@ -10,8 +10,7 @@ namespace Notes.Core
         public DbClient(IOptions<NoteDbConfig> noteDbConfig)
         {
             // create client, from db get collection
-            // var client = new MongoClient(noteDbConfig.Value.ConnectionString);
-            var client = new MongoClient(MONGODB_CONNECTION_STRING);
+             var client = new MongoClient(noteDbConfig.Value.ConnectionString);
 
             var databse = client.GetDatabase(noteDbConfig.Value.DatabaseName);
             _notes = databse.GetCollection<Note>(noteDbConfig.Value.CollectionName);
