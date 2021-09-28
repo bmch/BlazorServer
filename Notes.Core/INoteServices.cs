@@ -10,5 +10,7 @@ namespace Notes.Core
         Note GetNote(string id);
         void DeleteNote(string id);
         Note UpdateNote(Note note);
+        Note CheckReference(string reference);
+
     }
 }

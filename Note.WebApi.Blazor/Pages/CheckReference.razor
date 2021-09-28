@@ -1,0 +1,124 @@
+@page "/checkreference"
+
+@using Notes.Core;
+
+@inject INoteServices _db
+
+
+
+        @if (notes == null)
+        {
+            <p><em>Loading...</em></p>
+        }
+        else
+        {
+
+
+        <div class="@formGroupClass">
+            <h1 class="govuk-label-wrapper">
+                <label class="govuk-label govuk-label--l" for="event-name">
+                Check if reference exists
+                </label>
+            </h1>
+
+            <label class="govuk-label govuk-date-input__label" for="reference">
+                Reference
+            </label>
+
+         @if (showError)
+        {
+            <span class="govuk-error-message">
+                 <span class="govuk-visually-hidden">Error:</span> Please enter a valid reference
+            </span>
+        }
+
+            <input @bind="refToCheck"  id="reference" class="@inputClass"
+             type="text" name="reference">
+            <button @onclick="CheckReferenceExists" class="govuk-button" data-module="govuk-button">
+                Check
+            </button>
+
+         @if (found && !showError)
+        {
+            <div class="govuk-width-container">
+  <main class="govuk-main-wrapper govuk-main-wrapper--l" id="main-content" role="main">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        <div class="govuk-panel govuk-panel--confirmation">
+          <h1 class="govuk-panel__title">
+            Application complete
+          </h1>
+          <div class="govuk-panel__body">
+            Your reference number<br><strong>HDJ2123F</strong>
+          </div>
+        </div>
+
+        <p class="govuk-body">We have sent you a confirmation email.</p>
+
+        <h2 class="govuk-heading-m">What happens next</h2>
+
+        <p class="govuk-body">
+          We’ve sent your application to Hackney Electoral Register Office.
+        </p>
+        <p class="govuk-body">
+          They will contact you either to confirm your registration, or to ask for more information.
+        </p>
+
+        <p class="govuk-body">
+          <a href="#" class="govuk-link">What did you think of this service?</a> (takes 30 seconds)
+        </p>
+      </div>
+    </div>
+  </main>
+</div>
+        }
+        </div>
+
+        }
+
+@code {
+    private List<Note> notes;
+    private string refToCheck;
+    private string inputClass { get; set; }
+    private string formGroupClass { get; set; } 
+    private bool showError { get;set; }
+    private bool found {get;set;} = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        hideErrors();
+        notes =  _db.GetNotes();
+        await Task.Delay(1000);
+    }
+
+    private void hideErrors()
+    {
+         inputClass = "form-control govuk-input govuk-input--width-20";
+         formGroupClass = "govuk-form-group";
+         showError = false;
+    }
+
+    private void showErrors()
+    {
+         inputClass = "form-control govuk-input govuk-input--width-20  govuk-input--error";
+         formGroupClass = "govuk-form-group govuk-form-group--error";
+         showError = true;
+    }
+
+    private void  CheckReferenceExists()
+    {
+         Note foundNote =  _db.CheckReference(refToCheck);
+         if(foundNote == null)
+         {
+             showErrors();
+            Console.WriteLine(refToCheck + " was not found");
+         } else {
+             hideErrors();
+             found = true;
+              Console.WriteLine(refToCheck + " found the person name is " + foundNote.PersonName);
+         }
+    }
+}
+
+
+

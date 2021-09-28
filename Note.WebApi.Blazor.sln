@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Note.WebApi.Blazor", "Note.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Notes.Core", "Notes.Core\Notes.Core.csproj", "{5C828C8F-72D3-489B-8CEA-A023E33B34BB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SQLAccessLib", "SQLAccessLib\SQLAccessLib.csproj", "{96E78141-E27E-41B8-90E4-0F33684CB1B4}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,10 +21,6 @@ Global
 		{5C828C8F-72D3-489B-8CEA-A023E33B34BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5C828C8F-72D3-489B-8CEA-A023E33B34BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5C828C8F-72D3-489B-8CEA-A023E33B34BB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{96E78141-E27E-41B8-90E4-0F33684CB1B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{96E78141-E27E-41B8-90E4-0F33684CB1B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{96E78141-E27E-41B8-90E4-0F33684CB1B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{96E78141-E27E-41B8-90E4-0F33684CB1B4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

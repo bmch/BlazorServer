@@ -31,6 +31,7 @@ namespace Notes.Core
          
 
         public Note GetNote(string id) => _notes.Find(note => note.Id == id).First();
+        public Note CheckReference(string reference) => _notes.Find(note => note.Reference == reference).FirstOrDefault();
         
 
         public List<Note> GetNotes() => _notes.Find(Note => true).ToList();
