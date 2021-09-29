@@ -1,0 +1,79 @@
+
+@page "/confirmation/{fineid}"
+@using Notes.Core;
+
+@inject INoteServices _db;
+@inject NavigationManager NavigationManager
+
+        @if (FoundFine == null)
+        {
+            <p><em>Loading...</em></p>
+        }
+        else
+        {
+<div class="govuk-width-container">
+
+     <div class="govuk-breadcrumbs">
+  <ol class="govuk-breadcrumbs__list">
+    <li class="govuk-breadcrumbs__list-item">
+      <a class="govuk-breadcrumbs__link" href="/">Home</a>
+    </li>
+    <li class="govuk-breadcrumbs__list-item">
+      <a class="govuk-breadcrumbs__link" href="/checkreference">Check reference number</a>
+    </li>
+    <li class="govuk-breadcrumbs__list-item">
+      <a class="govuk-breadcrumbs__link" href="/makepayment">Make payment</a>
+    </li>
+    <li class="govuk-breadcrumbs__list-item">
+      <a class="govuk-breadcrumbs__link" href="/confirmation">Confirmation</a>
+    </li>
+  </ol>
+</div>
+
+  <main class="govuk-main-wrapper govuk-main-wrapper--l" id="main-content" role="main">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        <div class="govuk-panel govuk-panel--confirmation">
+          <h1 class="govuk-panel__title">
+            Payment complete
+          </h1>
+          <div class="govuk-panel__body">
+            Your reference number<br><strong>HDJ2123F</strong>
+          </div>
+        </div>
+
+        <p class="govuk-body">If you provided your email address, we have sent you a payment receipt.</p>
+
+        <h2 class="govuk-heading-m">What happens next</h2>
+
+        <p class="govuk-body">
+          Your fine has been reduced by the payment amount.
+        </p>
+        <p class="govuk-body">
+          If you still have an outstanding balance, this must be paid before the deadline or further action will be taken.
+        </p>
+
+        <p class="govuk-body">
+          <a href="#" class="govuk-link">What did you think of this service?</a> (takes 30 seconds)
+        </p>
+      </div>
+    </div>
+  </main>
+</div>
+        }
+@code {
+
+    [Parameter]
+    public string Fineid { get; set; }
+    private Note FoundFine { get; set; }
+
+        protected override async Task OnInitializedAsync()
+    {
+        FoundFine =  _db.GetNote(Fineid);
+        await Task.Delay(350);
+        FoundFine.Status = "PAID";
+
+        _db.UpdateNote(FoundFine);
+    }
+
+}

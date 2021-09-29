@@ -1,0 +1,119 @@
+@page "/checkreference"
+@using Notes.Core;
+
+@inject INoteServices _db;
+@inject NavigationManager NavigationManager
+
+
+        @if (notes == null)
+        {
+            <p><em>Loading...</em></p>
+        }
+        else
+        {
+<div class="govuk-width-container">
+
+  <div class="govuk-breadcrumbs">
+  <ol class="govuk-breadcrumbs__list">
+    <li class="govuk-breadcrumbs__list-item">
+      <a class="govuk-breadcrumbs__link" href="/">Home</a>
+    </li>
+    <li class="govuk-breadcrumbs__list-item">
+      <a class="govuk-breadcrumbs__link" href="/checkreference">Check reference number</a>
+    </li>
+  </ol>
+</div>
+
+  <main class="govuk-main-wrapper">
+
+    <hr class = "govuk-section-break--visible">
+    <div class="govuk-grid-row">
+
+      <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-xl govuk-!-margin-bottom-4 govuk-!-margin-top-4">Check your reference number</h1>
+      </div>
+
+    </div>
+   <hr class = "govuk-section-break--visible">
+
+   <div class="@formGroupClass">
+  <h3 class="govuk-label-wrapper">
+      <label class="govuk-label govuk-!-margin-top-5" for="event-name">
+    Enter your reference number here
+  </label>
+           @if (showError)
+        {
+            <span class="govuk-error-message">
+                 <span class="govuk-visually-hidden">Error:</span> Please enter a valid reference
+            </span>
+        }
+  </h3>
+  <input class="@inputClass" @bind="refToCheck" id="one-third" name="one-third" type="text">
+</div>
+
+<button class="govuk-button" @onclick="CheckReferenceExists" data-module="govuk-button">
+  Submit
+</button>
+
+<!-- ERROR MESSAGE HTML HERE -->
+
+<hr class = "govuk-section-break--visible">
+
+<p class="govuk-body-l govuk-!-margin-bottom-3">Where to find a reference number</p>
+<img src="https://i.ibb.co/g9mVcc5/licence-diagram.png">
+
+<p class="govuk-body-l govuk-!-margin-top-7">Help with this service</p>
+<p class="govuk-body">If you experience any problems when locating your reference number, please contact the enforcement office using the contact details on your 'Notice of Fine' letter.</p>
+
+  </main>
+</div>
+
+        }
+
+@code {
+private List<Note> notes;
+    private string refToCheck;
+    private string inputClass { get; set; }
+    private string formGroupClass { get; set; } 
+    private bool showError { get;set; }
+    private bool found {get;set;} = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        hideErrors();
+        notes =  _db.GetNotes();
+        await Task.Delay(1000);
+    }
+
+    private void hideErrors()
+    {
+        // inputClass = "form-control govuk-input govuk-input--width-20";
+       inputClass =  "govuk-input govuk-!-width-one-third";
+         formGroupClass = "govuk-form-group";
+         showError = false;
+    }
+
+    private void showErrors()
+    {
+      //   inputClass = "form-control govuk-input govuk-input--width-20  govuk-input--error";
+      inputClass =  "govuk-input govuk-!-width-one-third govuk-input--error";
+         formGroupClass = "govuk-form-group govuk-form-group--error";
+         showError = true;
+    }
+
+    private void  CheckReferenceExists()
+    {
+         Note foundNote =  _db.CheckReference(refToCheck);
+         if(foundNote == null)
+         {
+             showErrors();
+            Console.WriteLine(refToCheck + " was not found");
+         } else {
+             hideErrors();
+             found = true;
+              Console.WriteLine(refToCheck + " found the person name is " + foundNote.PersonName);
+              NavigationManager.NavigateTo("/makepayment/" + foundNote.Id);
+         }
+    }
+
+}

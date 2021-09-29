@@ -15,9 +15,9 @@ namespace Notes.Core
 
          public NoteServices(INoteDbConfig settings)
         {
-           // var client = new MongoClient(settings.ConnectionString);
-           var client = new MongoClient(Environment.GetEnvironmentVariable("Custom"));
-            var database = client.GetDatabase(settings.DatabaseName);
+            var client = new MongoClient(settings.ConnectionString);
+            var client = new MongoClient(Environment.GetEnvironmentVariable("Custom"));
+           // var database = client.GetDatabase(settings.DatabaseName);
 
             _notes = database.GetCollection<Note>(settings.CollectionName);
         }
