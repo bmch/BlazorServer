@@ -112,14 +112,14 @@
   <div id="amount_to_pay-hint" class="govuk-hint govuk-!-font-size-16">
     For part payment please enter an amount between £5.00 and your fine amount of £@FoundFine.Amount.00
   </div>
-    <input class="govuk-input govuk-input--width-10" id="amount_to_pay" name="amount_to_pay" type="text" spellcheck="false">
+    <input  @bind="amount" class="govuk-input govuk-input--width-10" id="amount_to_pay" name="amount_to_pay" type="text" spellcheck="false">
   </div>
 
   <div class="govuk-form-group">
       <label class="govuk-label govuk-!-margin-top-4" for="email">
     <b>Email Address</b>
   </label>
-  <input class="govuk-input govuk-input--width-20" id="email" name="email" type="email" spellcheck="false" autocomplete="email">
+  <input  @bind="email" class="govuk-input govuk-input--width-20" id="email" name="email" type="email" spellcheck="false" autocomplete="email">
   </div>
 
 </fieldset>
@@ -147,7 +147,9 @@
     [Parameter]
     public string Fineid { get; set; }
     private Note FoundFine { get; set; }
-
+    private string email;
+    private double amount;
+//
         protected override async Task OnInitializedAsync()
     {
         FoundFine =  _db.GetNote(Fineid);
@@ -156,6 +158,18 @@
 
         private void  SuccessPayment()
     {
+      // email
+      // amount being paid
+      // check amount repaid?
+
+            var ticks = new DateTime(2010,9,25).Ticks;
+            var ans = DateTime.Now.Ticks - ticks;
+            var txRef = ans.ToString("x").ToUpper();
+        FoundFine.TxRef = txRef;
+        FoundFine.Email = email;
+        FoundFine.AmountRepaid += amount;
+        FoundFine.Status = "PAID";
+        _db.UpdateNote(FoundFine);
       NavigationManager.NavigateTo("/confirmation/" + Fineid);
     }
 }

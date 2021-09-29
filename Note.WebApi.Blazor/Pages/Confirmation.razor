@@ -38,11 +38,18 @@
             Payment complete
           </h1>
           <div class="govuk-panel__body">
-            Your reference number<br><strong>HDJ2123F</strong>
+            Your reference number<br><strong>@FoundFine.TxRef</strong>
           </div>
         </div>
 
+@if (!String.IsNullOrEmpty(FoundFine.Email))
+    {
+    <p class="govuk-body">An email confirmation has been sent to @FoundFine.Email</p>
+    }
+    else 
+    {
         <p class="govuk-body">If you provided your email address, we have sent you a payment receipt.</p>
+    }
 
         <h2 class="govuk-heading-m">What happens next</h2>
 

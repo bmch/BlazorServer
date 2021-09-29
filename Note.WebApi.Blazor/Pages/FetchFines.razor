@@ -2,10 +2,12 @@
 
 @using Notes.Core;
 
-@inject INoteServices _db
-<h1>Fines</h1>
+@inject INoteServices _db;
+<div style="max-width: 1180px; 
+	margin: 0 auto">
+<h1 class="govuk-heading-l">Issued Fines</h1>
 
-<p>This component demonstrates fetching and creating fines from a service.</p>
+<p>TV licence fines issued.</p>
 
 @if (notes == null)
 {
@@ -13,6 +15,7 @@
 }
 else
 {
+    
         <table class="table">
         <thead>
             <tr>
@@ -21,7 +24,9 @@ else
                 <th>Reference</th>
                 <th>Address</th>
                 <th>Fine Amount</th>
-                <th>Delete</th>
+                <th>Amount Repaid</th>
+                <th>Date Issued</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
@@ -32,7 +37,9 @@ else
                     <td>@fine.Status</td>
                     <td>@fine.Reference</td>
                     <td>@fine.Address1</td>
-                    <td>@fine.Amount</td>
+                    <td>£@fine.Amount</td>
+                    <td>£@fine.AmountRepaid</td>
+                    <td>@fine.FineIssuedDate</td>
 
                     <td><button @onclick="()=>Delete(fine)">Delete</button></td>
 
@@ -40,21 +47,23 @@ else
             }
         </tbody>
     </table>
-            
+    
+    <div style="padding-top:150px;margin-bottom:250px;">
 
     <input placeholder="Name" @bind="personName" />
     <input placeholder="Address" @bind="address1" />
     <input placeholder="Fine amount" @bind="amount" />
 
     <button @onclick="AddNote">Add Fine</button>
-
+</div>
 }
+</div>
 
 @code {
     private List<Note> notes;
     private string personName;
     private string address1;
-    private int amount;
+    private double amount;
 
 
     protected override async Task OnInitializedAsync()
@@ -76,7 +85,8 @@ else
                 PersonName = personName, 
                 Status = "unpaid",
                 Address1 = address1,
-                Reference = reference
+                Reference = reference,
+                FineIssuedDate = System.DateTime.Now
                 };
 
             _db.AddNote(noteToAdd);
